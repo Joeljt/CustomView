@@ -2,9 +2,14 @@ package com.ljt.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 /**
@@ -17,7 +22,9 @@ public class TextView extends View {
 
     private String mText;
     private int mTextSize = 15;
-    private int mTextColor;
+    private int mTextColor = Color.BLACK;
+
+    private Paint mPaint;
 
     /**
      * 在代码中初始化时使用
@@ -47,26 +54,79 @@ public class TextView extends View {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.JoeTextView);
 
-        mTextColor = typedArray.getColor(R.styleable.JoeTextView_JoeTextColor, Color.BLACK);
-//        mTextSize = typedArray.getDimensionPixelSize()
+        mText = typedArray.getString(R.styleable.JoeTextView_JoeText);
+        mTextColor = typedArray.getColor(R.styleable.JoeTextView_JoeTextColor, mTextColor);
+        mTextSize = typedArray.getDimensionPixelSize(R.styleable.JoeTextView_JoeTextSize, sp2px(mTextSize));
 
         typedArray.recycle();
 
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true); // 抗锯齿
+        mPaint.setTextSize(mTextSize);
+        mPaint.setColor(mTextColor);
+
+    }
+
+    private int sp2px(int sp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                sp, getResources().getDisplayMetrics());
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
         // mode: AT_MOST, EXACTLY, UNSECIFIED
         // AT_MOST 一般对应 wrap_content, EXACTLY 对应具体的数值, unspecified 一般不使用，系统控件才会用到
 
+        // 1. 获取控件的测量模式
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+        // 2. 获取控件的宽度，并根据测量模式进行测量
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        if (widthMode == MeasureSpec.AT_MOST) {
+
+            // 使用画笔对 mText 进行测量，并将测量结果存入 rect 对象中
+            Rect rect = new Rect();
+            mPaint.getTextBounds(mText, 0, mText.length(), rect);
+            widthSize = rect.width();
+
+        }
+
+        // 3. 获取控件的高度，并根据测量模式进行测量
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        if (heightMode == MeasureSpec.AT_MOST) {
+
+            // 使用画笔对 mText 进行测量，并将测量结果存入 rect 对象中
+            Rect rect = new Rect();
+            mPaint.getTextBounds(mText, 0, mText.length(), rect);
+            heightSize = rect.height();
+
+        }
+
+        setMeasuredDimension(widthSize, heightSize);
+
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        // 使用 canvas 来画文本内容
+        // text, x, y, paint
+        // X 开始的位置，y 是基线
+
+        Paint.FontMetricsInt metrics = mPaint.getFontMetricsInt();
+        int baseLine = - metrics.top;
+
+        Log.e("ljt", metrics.toString());
+        Log.e("ljt", "" + metrics.top);
+        Log.e("ljt", "" + metrics.bottom);
+        Log.e("ljt", "" + getHeight());
+
+
+        canvas.drawText(mText, 0, baseLine, mPaint);
 
     }
 }
