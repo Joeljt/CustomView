@@ -1,1 +1,1 @@
-include ':day_01'
+include ':day_01', ':day_02'

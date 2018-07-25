@@ -10,7 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
-import android.widget.LinearLayout;
+import android.view.View;
+
 
 /**
  * Author: ljt@yonyou.com
@@ -25,7 +26,7 @@ import android.widget.LinearLayout;
  *          3. 设置焦点等方式，改变 flag 的值
  */
 
-public class TextView extends LinearLayout {
+public class TextView extends View {
 
     private String mText;
     private int mTextSize = 15;
