@@ -10,15 +10,22 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * Author: ljt@yonyou.com
  * Date&Time: 2018/07/23, 07:16
  * For：自定义 TextView
+ *
+ * 继承自 LinearLayout 时，除非设置 background 属性，否则无法显示
+ * 原因：ViewGroup 默认不会执行 onDraw() 方法
+ *
+ * 解决方法：1.重写 dispatchDraw()
+ *          2. 给一个默认的透明背景
+ *          3. 设置焦点等方式，改变 flag 的值
  */
 
-public class TextView extends View {
+public class TextView extends LinearLayout {
 
     private String mText;
     private int mTextSize = 15;
@@ -65,6 +72,10 @@ public class TextView extends View {
         mPaint.setTextSize(mTextSize);
         mPaint.setColor(mTextColor);
 
+        setBackgroundColor(Color.parseColor("#ffffffff"));
+
+//        setWillNotDraw(true);
+
     }
 
     private int sp2px(int sp) {
@@ -90,7 +101,7 @@ public class TextView extends View {
             // 使用画笔对 mText 进行测量，并将测量结果存入 rect 对象中
             Rect rect = new Rect();
             mPaint.getTextBounds(mText, 0, mText.length(), rect);
-            widthSize = rect.width();
+            widthSize = rect.width() + getPaddingLeft() + getPaddingRight();
 
         }
 
@@ -101,7 +112,7 @@ public class TextView extends View {
             // 使用画笔对 mText 进行测量，并将测量结果存入 rect 对象中
             Rect rect = new Rect();
             mPaint.getTextBounds(mText, 0, mText.length(), rect);
-            heightSize = rect.height();
+            heightSize = rect.height() + getPaddingTop() + getPaddingBottom();
 
         }
 
@@ -117,16 +128,65 @@ public class TextView extends View {
         // text, x, y, paint
         // X 开始的位置，y 是基线
 
+//        Paint.FontMetrics metrics = mPaint.getFontMetrics();
+
+//        int dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
+//        int baseLine = getHeight()/2 + dy;
+
+//        int textHeight = (metrics.descent - metrics.ascent + metrics.leading);
+//
+//        int centerY = textHeight / 2;
+//
+//        int dy1 = centerY - metrics.descent;
+
+
+//        (metrics.descent - metrics.ascent) / 2 + ((metrics.descent - metrics.ascent) / 2 - metrics.descent);
+
+
+//        Log.e("ljt", metrics.toString());
+//        Log.e("ljt", "" + getHeight());
+//        Log.e("ljt", "" + baseLine);
+//        Log.e("ljt", "" + dy);
+//
+//        Log.e("ljt", " =============================== ");
+//
+//
+//        Log.e("ljt", "" + textHeight);
+//        Log.e("ljt", "" + centerY);
+//        Log.e("ljt", "" + dy1);
+
+//        Paint.FontMetrics metrics = mPaint.getFontMetrics();
+//        float dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
+//        float baseLine = getHeight() / 2 + dy;
+
         Paint.FontMetricsInt metrics = mPaint.getFontMetricsInt();
-        int baseLine = - metrics.top;
+        int dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
+        int baseLine = getHeight()/2 + dy;
+
 
         Log.e("ljt", metrics.toString());
-        Log.e("ljt", "" + metrics.top);
-        Log.e("ljt", "" + metrics.bottom);
-        Log.e("ljt", "" + getHeight());
 
+        canvas.drawText(mText, getPaddingLeft(), baseLine, mPaint);
 
-        canvas.drawText(mText, 0, baseLine, mPaint);
+//        canvas.drawText(mText, getPaddingLeft(), -metrics.ascent, mPaint);
+
 
     }
+
+//    @Override
+//    protected void dispatchDraw(Canvas canvas) {
+//        super.dispatchDraw(canvas);
+//
+//
+//        Paint.FontMetricsInt metrics = mPaint.getFontMetricsInt();
+//        int dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
+//        int baseLine = getHeight()/2 + dy;
+//
+//
+//        Log.e("ljt", metrics.toString());
+//
+//        canvas.drawText(mText, getPaddingLeft(), baseLine, mPaint);
+//    }
+
+
 }
