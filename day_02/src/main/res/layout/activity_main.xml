@@ -7,6 +7,7 @@
     tools:context="com.ljt.day_02.MainActivity">
 
     <com.ljt.day_02.QQStepView
+        android:id="@+id/step_view"
         app:outer_color="@color/colorPrimary"
         app:border_width="10dp"
         app:inner_color="#FF0000"

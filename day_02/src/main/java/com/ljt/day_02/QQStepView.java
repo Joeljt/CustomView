@@ -37,8 +37,8 @@ public class QQStepView extends View {
     private Paint mOutPaint, mInnerPaint, mTextPaint;
 
     // 最大步数
-    private int mMaxStep = 4000;
-    private int mCurrentStep = 3000;
+    private int mMaxStep = 0;
+    private int mCurrentStep = 0;
 
     public QQStepView(Context context) {
         this(context, null);
@@ -119,22 +119,35 @@ public class QQStepView extends View {
         float sweepAngle = (float) mCurrentStep / mMaxStep;
         canvas.drawArc(rectF, 135,  sweepAngle*270, false, mInnerPaint);
 
-        // 绘制文字
+        // 对文字进行测量
         String text = String.valueOf(mCurrentStep);
         Rect textBounds = new Rect();
         mTextPaint.getTextBounds(text, 0, text.length(), textBounds);
+
+        // 获取绘制 x 坐标
         int dx = getWidth() / 2 - textBounds.width()/2;
 
+        // 获取基线 y 坐标
         Paint.FontMetricsInt fontMetricsInt = mTextPaint.getFontMetricsInt();
         int dy = (fontMetricsInt.bottom - fontMetricsInt.top) / 2 - fontMetricsInt.bottom;
         int baseLine = getHeight() / 2 + dy;
 
+        // 绘制文字
         canvas.drawText(text, dx, baseLine, mTextPaint);
 
     }
 
     private int px2sp(int sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, getResources().getDisplayMetrics());
+    }
+
+    public synchronized void setMaxStep(int maxStep) {
+        this.mMaxStep = maxStep;
+    }
+
+    public synchronized void setCurrentStep(int currentStep) {
+        this.mCurrentStep = currentStep;
+        invalidate();
     }
 
 }
