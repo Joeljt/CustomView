@@ -3,11 +3,11 @@
 
     <declare-styleable name="QQStepView">
 
-        <attr name="OuterColor" format="color"/>
-        <attr name="InnerColor" format="color"/>
-        <attr name="BorderWidth" format="dimension"/>
-        <attr name="TextSize" format="dimension"/>
-        <attr name="TextColor" format="color"/>
+        <attr name="outer_color" format="color"/>
+        <attr name="inner_color" format="color"/>
+        <attr name="border_width" format="dimension"/>
+        <attr name="text_size" format="dimension"/>
+        <attr name="text_color" format="color"/>
 
     </declare-styleable>
 
