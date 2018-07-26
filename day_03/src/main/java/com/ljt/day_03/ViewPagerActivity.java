@@ -20,10 +20,12 @@ import java.util.List;
 
 public class ViewPagerActivity extends AppCompatActivity {
 
-    private String[] items = {"直播", "推荐", "视频", "图片", "段子", "精华", "直播", "推荐"};
+    private String[] items = {"直播", "推荐", "视频", "图片", "段子", "精华"};
     private LinearLayout mIndicatorContainer;
     private List<ColorTrackTextView> mIndicators;
     private ViewPager mViewPager;
+
+    private int currPosition = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +39,8 @@ public class ViewPagerActivity extends AppCompatActivity {
 
         initIndicator();
         initViewPager();
+
+        mViewPager.setCurrentItem(1);
 
     }
 
@@ -77,6 +81,13 @@ public class ViewPagerActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
+                mIndicators.get(currPosition).setTextSize(18);
+
+                ColorTrackTextView colorTrackTextView = mIndicators.get(position);
+                colorTrackTextView.setTextSize(20);
+
+                currPosition = position;
+
             }
 
             @Override
@@ -96,7 +107,12 @@ public class ViewPagerActivity extends AppCompatActivity {
 
             params.weight = 1;
             ColorTrackTextView view = new ColorTrackTextView(this);
-            view.setTextSize(20);
+            view.setTextSize(18);
+
+//            if (i == 0) {
+//                view.setTextSize(22);
+//            }
+
             view.setChangeColor(Color.RED);
             view.setText(items[i]);
             view.setLayoutParams(params);

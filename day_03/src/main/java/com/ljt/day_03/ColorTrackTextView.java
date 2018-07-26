@@ -107,6 +107,8 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
 
     private void drawText(Canvas canvas, Paint paint, int start, int end) {
 
+        paint.setTextSize(getTextSize());
+
         // 保存当前画布状态
         canvas.save();
 
