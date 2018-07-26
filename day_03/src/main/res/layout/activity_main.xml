@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.ljt.day_03.MainActivity">
 
-    <TextView
+    <com.ljt.day_03.ColorTrackTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="lijiateng"
+        android:textSize="30sp"
+        app:origin_color="@android:color/black"
+        app:change_color="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
