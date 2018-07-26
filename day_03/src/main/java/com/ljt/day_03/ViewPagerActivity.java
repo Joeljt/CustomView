@@ -40,6 +40,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         initIndicator();
         initViewPager();
 
+        // 默认选中推荐
         mViewPager.setCurrentItem(1);
 
     }
@@ -84,7 +85,7 @@ public class ViewPagerActivity extends AppCompatActivity {
                 mIndicators.get(currPosition).setTextSize(18);
 
                 ColorTrackTextView colorTrackTextView = mIndicators.get(position);
-                colorTrackTextView.setTextSize(20);
+                colorTrackTextView.setTextSize(19);
 
                 currPosition = position;
 
@@ -108,10 +109,6 @@ public class ViewPagerActivity extends AppCompatActivity {
             params.weight = 1;
             ColorTrackTextView view = new ColorTrackTextView(this);
             view.setTextSize(18);
-
-//            if (i == 0) {
-//                view.setTextSize(22);
-//            }
 
             view.setChangeColor(Color.RED);
             view.setText(items[i]);
