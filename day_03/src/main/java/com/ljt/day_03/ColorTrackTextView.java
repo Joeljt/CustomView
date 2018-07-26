@@ -27,6 +27,10 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
 
     private Direction mDirection = Direction.LEFT_TO_RIGHT;
 
+    public void setChangeColor(int color) {
+        mChangePaint.setColor(color);
+    }
+
     public enum Direction{
         LEFT_TO_RIGHT,
         RIGHT_TO_LEFT
