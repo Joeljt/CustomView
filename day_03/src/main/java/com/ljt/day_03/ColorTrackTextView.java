@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -22,7 +23,14 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
 
     private Paint mOriginPaint, mChangePaint;
 
-    private float mProgress = 0.5f;
+    private float mProgress;
+
+    private Direction mDirection = Direction.LEFT_TO_RIGHT;
+
+    public enum Direction{
+        LEFT_TO_RIGHT,
+        RIGHT_TO_LEFT
+    }
 
     public ColorTrackTextView(Context context) {
         this(context, null);
@@ -56,7 +64,7 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(changeColor);
-        paint.setDither(true); // 防抖动
+//        paint.setDither(true); // 防抖动
         paint.setTextSize(getTextSize());
         return paint;
     }
@@ -69,11 +77,27 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
         // 根据进度把中间值算出来
         int middle = (int) (mProgress * getWidth());
 
-        // 绘制不变色的区域
-        drawText(canvas, mOriginPaint, 0, middle);
+        if (mDirection == Direction.LEFT_TO_RIGHT) {
 
-        // 绘制变色区域
-        drawText(canvas, mChangePaint, middle, getWidth());
+            // 左边是红色，右边是黑色
+
+            // 绘制变色的区域
+            drawText(canvas, mChangePaint, 0, middle);
+
+            // 绘制不变色区域
+            drawText(canvas, mOriginPaint, middle, getWidth());
+
+        } else {
+
+            // 左边是黑色，右边是红色
+
+            // 绘制变色区域
+            drawText(canvas, mChangePaint, getWidth() - middle, getWidth());
+
+            // 绘制不变色的区域
+            drawText(canvas, mOriginPaint, 0, getWidth() - middle);
+
+        }
 
     }
 
@@ -96,11 +120,18 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
         int y = getHeight() / 2 + (metrics.bottom - metrics.top) / 2 - metrics.bottom;
         canvas.drawText(text, x, y, paint);
 
-        canvas.drawText(text, x, y, paint);
-
         // 清空画布属性，方便接下来绘制变色的部分
         canvas.restore();
 
+    }
+
+    public void setDirection(Direction direction) {
+        this.mDirection = direction;
+    }
+
+    public void setCurrProgress(float currProgress) {
+        this.mProgress = currProgress;
+        invalidate();
     }
 
 }
