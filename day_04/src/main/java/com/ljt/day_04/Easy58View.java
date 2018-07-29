@@ -41,17 +41,16 @@ public class Easy58View extends View {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Easy58View);
         mSquareColor = typedArray.getDimensionPixelSize(R.styleable.Easy58View_square_color, Color.BLUE);
-        mTriangleColor = typedArray.getColor(R.styleable.Easy58View_triangle_color, Color.BLUE);
+        mTriangleColor = typedArray.getColor(R.styleable.Easy58View_triangle_color, Color.RED);
         mCircleColor = typedArray.getColor(R.styleable.Easy58View_circle_color, Color.GREEN);
         typedArray.recycle();
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setStrokeWidth(mStrokeWidth);
 
         mPath = new Path();
-        rectF = new RectF(mStrokeWidth/2,mStrokeWidth/2,getWidth()-mStrokeWidth/2, getHeight()-mStrokeWidth/2);
+
+//        rectF = new RectF(mStrokeWidth/2,mStrokeWidth/2,getWidth()-mStrokeWidth/2, getHeight()-mStrokeWidth/2);
 
     }
 
@@ -66,6 +65,9 @@ public class Easy58View extends View {
 
         // 保证是一个正方形
         setMeasuredDimension(size, size);
+
+        // 在测量完成后再去获取宽高，否则无效
+        rectF = new RectF(0,0,getWidth(), getHeight());
 
     }
 
@@ -93,6 +95,8 @@ public class Easy58View extends View {
     }
 
     private void drawTriangle(Canvas canvas) {
+        mPaint.setColor(Color.GREEN);
+
         mPath.moveTo(getWidth() / 2, 0);
         mPath.lineTo(0, (float) Math.sqrt(getWidth()*getWidth() - getWidth()/2*getWidth()/2));
         mPath.lineTo(getWidth(), (float) Math.sqrt(getWidth()*getWidth() - getWidth()/2*getWidth()/2));

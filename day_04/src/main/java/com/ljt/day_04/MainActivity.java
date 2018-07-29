@@ -8,29 +8,40 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Easy58View cpView;
+    private Easy58View shapeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cpView = (Easy58View)findViewById(R.id.cp_view);
+        shapeView = (Easy58View)findViewById(R.id.cp_view);
 
     }
 
     public void test(View view) {
 
-        ValueAnimator valueAnimator = ObjectAnimator.ofFloat(0, 1);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        new Thread(){
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float value = (float) valueAnimator.getAnimatedValue();
-//                cpView.setProgress(value);
+            public void run() {
+                while (true) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 更新形状绘制
+                            shapeView.exchange();
+                        }
+                    });
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
-        });
-        valueAnimator.setDuration(1500);
-        valueAnimator.start();
+        }.start();
 
     }
 }
