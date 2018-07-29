@@ -3,6 +3,7 @@
 
     <declare-styleable name="CircleProgressView">
 
+        <attr name="progress_stroke_width" format="dimension"/>
         <attr name="outer_circle_color" format="color|reference"/>
         <attr name="inner_circle_color" format="color|reference"/>
         <attr name="progress_text_color" format="color|reference"/>
