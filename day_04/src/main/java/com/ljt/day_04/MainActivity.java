@@ -8,14 +8,14 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CircleProgressView cpView;
+    private Easy58View cpView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cpView = (CircleProgressView)findViewById(R.id.cp_view);
+        cpView = (Easy58View)findViewById(R.id.cp_view);
 
     }
 
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float value = (float) valueAnimator.getAnimatedValue();
-                cpView.setProgress(value);
+//                cpView.setProgress(value);
             }
         });
         valueAnimator.setDuration(1500);

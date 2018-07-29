@@ -8,13 +8,9 @@
     android:gravity="center"
     tools:context="com.ljt.day_04.MainActivity">
 
-    <com.ljt.day_04.CircleProgressView
+    <com.ljt.day_04.Easy58View
         android:id="@+id/cp_view"
-        app:progress_stroke_width="3dp"
-        app:outer_circle_color="#80acb4"
-        app:inner_circle_color="#933213"
-        app:progress_text_color="@color/colorAccent"
-        app:progress_text_size="18sp"
+
         android:layout_width="280dp"
         android:layout_height="280dp" />
 
