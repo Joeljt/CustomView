@@ -17,13 +17,13 @@ import android.view.View;
  * Author: ljt@yonyou.com
  * Date&Time: 2018/07/23, 07:16
  * For：自定义 TextView
- *
+ * <p>
  * 继承自 LinearLayout 时，除非设置 background 属性，否则无法显示
  * 原因：ViewGroup 默认不会执行 onDraw() 方法
- *
+ * <p>
  * 解决方法：1.重写 dispatchDraw()
- *          2. 给一个默认的透明背景
- *          3. 设置焦点等方式，改变 flag 的值
+ * 2. 给一个默认的透明背景
+ * 3. 设置焦点等方式，改变 flag 的值
  */
 
 public class TextView extends View {
@@ -36,6 +36,7 @@ public class TextView extends View {
 
     /**
      * 在代码中初始化时使用
+     *
      * @param context
      */
     public TextView(Context context) {
@@ -44,8 +45,9 @@ public class TextView extends View {
 
     /**
      * 在布局中声明时调用此构造方法
+     *
      * @param context
-     * @param attrs 系统属性通过该属性传入
+     * @param attrs   系统属性通过该属性传入
      */
     public TextView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
@@ -53,6 +55,7 @@ public class TextView extends View {
 
     /**
      * 在布局文件中声明，并且使用了 style 属性时，调用此构造方法
+     *
      * @param context
      * @param attrs
      * @param defStyleAttr
@@ -73,7 +76,7 @@ public class TextView extends View {
         mPaint.setTextSize(mTextSize);
         mPaint.setColor(mTextColor);
 
-        setBackgroundColor(Color.parseColor("#ffffffff"));
+//        setBackgroundColor(Color.parseColor("#ffffffff"));
 
 //        setWillNotDraw(true);
 
@@ -162,16 +165,17 @@ public class TextView extends View {
 
         Paint.FontMetricsInt metrics = mPaint.getFontMetricsInt();
         int dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
-        int baseLine = getHeight()/2 + dy;
+        int baseLine = getHeight() / 2 + dy;
 
 
         Log.e("ljt", metrics.toString());
 
         canvas.drawText(mText, getPaddingLeft(), baseLine, mPaint);
 
-//        canvas.drawText(mText, getPaddingLeft(), -metrics.ascent, mPaint);
 
-
+        // 计算文字BaseLine
+        float textBaseY = getHeight() / 2 + (Math.abs(mPaint.ascent()) - mPaint.descent()) / 2;
+        canvas.drawText(mText, getPaddingLeft(), textBaseY, mPaint);
     }
 
 //    @Override
