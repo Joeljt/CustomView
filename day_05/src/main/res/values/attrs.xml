@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RatingBar">
+
+        <attr name="rating_bar_focused" format="dimension"/>
+        <attr name="rating_bar_unfocused" format="dimension"/>
+        <attr name="rating_bar_grade_level" format="integer"/>
+
+    </declare-styleable>
+
+</resources>
