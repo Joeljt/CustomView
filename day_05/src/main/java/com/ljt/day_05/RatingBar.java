@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -20,6 +21,8 @@ public class RatingBar extends View {
     private Bitmap mFocusedDrawable, mUnfocusedDrawable;
 
     private int mGradeLevel;
+
+    private int mCurrGrade;
 
     public RatingBar(Context context) {
         this(context, null);
@@ -69,9 +72,47 @@ public class RatingBar extends View {
         for (int i = 0; i < mGradeLevel; i++) {
 
             int x = mFocusedDrawable.getWidth() * i;
-            canvas.drawBitmap(mUnfocusedDrawable, x, 0, null);
+
+            if (mCurrGrade > i) {
+                // 假设分数为 2 分，0 和 1 需要绘制 mFocusedDrawable，>1 的部分绘制 mUnfocusedDrawable
+                canvas.drawBitmap(mFocusedDrawable, x, 0, null);
+            } else {
+                canvas.drawBitmap(mUnfocusedDrawable, x, 0, null);
+            }
 
         }
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+                // 获取触摸位置的 x 坐标，与单个星星的宽度做除法，得到分数值
+                // 除完以后需要有个 +1 的矫正操作
+                int currGrade = (int) (event.getX() / mFocusedDrawable.getWidth() + 1);
+
+                // 屏蔽非法值
+                if(currGrade < 0) {
+                    currGrade = 1;
+                }else if(currGrade > mGradeLevel) {
+                    currGrade = mGradeLevel;
+                }
+
+                // 更新变量
+                mCurrGrade = currGrade;
+
+                // 更新当前分数后重新绘制页面
+                invalidate();
+
+                // 自己消费触摸事件
+                return true;
+
+        }
+
+        return super.onTouchEvent(event);
     }
 }
