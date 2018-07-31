@@ -91,9 +91,16 @@ public class RatingBar extends View {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_UP:
+
+                // 修正 x 的值，有可能为负值
+                float eventX = event.getX();
+                if(eventX < 0) {
+                    eventX = 0;
+                }
+
                 // 获取触摸位置的 x 坐标，与单个星星的宽度做除法，得到分数值
                 // 除完以后需要有个 +1 的矫正操作
-                int currGrade = (int) (event.getX() / mFocusedDrawable.getWidth() + 1);
+                int currGrade = (int) (eventX / mFocusedDrawable.getWidth() + 1);
 
                 // 屏蔽非法值
                 if(currGrade < 0) {
