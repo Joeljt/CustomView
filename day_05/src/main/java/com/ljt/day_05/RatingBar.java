@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,6 +20,8 @@ import android.view.View;
 public class RatingBar extends View {
 
     private Bitmap mFocusedDrawable, mUnfocusedDrawable;
+
+    private int mSpacing;
 
     private int mGradeLevel;
 
@@ -38,6 +41,7 @@ public class RatingBar extends View {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RatingBar);
         int focusedResourceId = typedArray.getResourceId(R.styleable.RatingBar_rating_bar_focused, 0);
         int unfocusedResourceId = typedArray.getResourceId(R.styleable.RatingBar_rating_bar_unfocused, 0);
+        mSpacing = typedArray.getDimensionPixelSize(R.styleable.RatingBar_rating_bar_horizatol_spacing, dp2px(15));
         mGradeLevel = typedArray.getInt(R.styleable.RatingBar_rating_bar_grade_level, 0);
         
         // 强制校验
@@ -53,12 +57,17 @@ public class RatingBar extends View {
 
     }
 
+    private int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                dp, getResources().getDisplayMetrics());
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         // 宽应该是 一个星星的宽度 * 星星的数量；高应该是 星星的高度 即可
-        int width = mFocusedDrawable.getWidth() * mGradeLevel;
+        int width = mFocusedDrawable.getWidth() * mGradeLevel + mSpacing * mGradeLevel;
         int height = mFocusedDrawable.getHeight();
 
         setMeasuredDimension(width, height);
@@ -72,6 +81,10 @@ public class RatingBar extends View {
         for (int i = 0; i < mGradeLevel; i++) {
 
             int x = mFocusedDrawable.getWidth() * i;
+            if(i > 0) {
+                x = mFocusedDrawable.getWidth() * i + mSpacing * i;
+            }
+
 
             if (mCurrGrade > i) {
                 // 假设分数为 2 分，0 和 1 需要绘制 mFocusedDrawable，>1 的部分绘制 mUnfocusedDrawable
@@ -89,7 +102,7 @@ public class RatingBar extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
-
+            case MotionEvent.ACTION_UP:
                 // 修正 x 的值，有可能为负值
                 float eventX = event.getX();
                 if(eventX < 0) {
@@ -98,7 +111,7 @@ public class RatingBar extends View {
 
                 // 获取触摸位置的 x 坐标，与单个星星的宽度做除法，得到分数值
                 // 除完以后需要有个 +1 的矫正操作
-                int currGrade = (int) (eventX / mFocusedDrawable.getWidth() + 1);
+                int currGrade = (int) (eventX / (mFocusedDrawable.getWidth() + mSpacing)) + 1;
 
                 // 屏蔽非法值
                 if(currGrade < 0) {

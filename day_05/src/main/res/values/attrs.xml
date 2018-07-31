@@ -6,6 +6,7 @@
         <attr name="rating_bar_focused" format="dimension"/>
         <attr name="rating_bar_unfocused" format="dimension"/>
         <attr name="rating_bar_grade_level" format="integer"/>
+        <attr name="rating_bar_horizatol_spacing" format="dimension"/>
 
     </declare-styleable>
 
