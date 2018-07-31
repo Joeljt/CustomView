@@ -88,9 +88,7 @@ public class RatingBar extends View {
     public boolean onTouchEvent(MotionEvent event) {
 
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-            case MotionEvent.ACTION_UP:
 
                 // 修正 x 的值，有可能为负值
                 float eventX = event.getX();
@@ -109,17 +107,20 @@ public class RatingBar extends View {
                     currGrade = mGradeLevel;
                 }
 
+                // 分数如果相同，则不再进行重绘，避免 onDraw()方法的多次调用
+                if(mCurrGrade == currGrade){
+                    return true;
+                }
+
                 // 更新变量
                 mCurrGrade = currGrade;
 
                 // 更新当前分数后重新绘制页面
                 invalidate();
 
-                // 自己消费触摸事件
-                return true;
-
         }
 
-        return super.onTouchEvent(event);
+        // 自己消费触摸事件
+        return true;
     }
 }
