@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" android:orientation="vertical"
     tools:context="com.ljt.view.MainActivity">
 
     <com.ljt.view.TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#ff0000"
-        app:JoeText="河南Darren"
-        app:JoeTextSize="30sp"
         android:padding="10dp"
+        app:JoeText="河南Darren"
         app:JoeTextColor="@android:color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:JoeTextSize="30sp"/>
 
     <com.ljt.view.TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         app:JoeText="李佳腾"
-        android:layout_marginTop="10dp"
-        app:JoeTextSize="30sp"
         app:JoeTextColor="@android:color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:JoeTextSize="30sp"/>
 
     <com.ljt.view.TextView
-        android:layout_gravity="center"
-        app:JoeText="lijiateng"
-        app:JoeTextSize="50sp"
-        android:layout_marginTop="10dp"
-        app:JoeTextColor="@android:color/black"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        app:JoeText="lijiateng"
+        app:JoeTextColor="@android:color/black"
+        app:JoeTextSize="50sp"/>
 
     <TextView
-        android:layout_gravity="center"
-        android:background="#ff0000"
-     android:text="lijiateng"
-        android:textColor="@android:color/white"
-        android:textSize="50sp"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="#ff0000"
+        android:text="lijiateng"
+        android:textColor="@android:color/white"
+        android:textSize="50sp"/>
 
 </LinearLayout>
