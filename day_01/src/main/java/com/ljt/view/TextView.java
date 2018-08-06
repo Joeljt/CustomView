@@ -2,6 +2,7 @@ package com.ljt.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -82,6 +83,8 @@ public class TextView extends View {
 
     }
 
+    private Rect bounds;
+
     public void setText(String text) {
         mText = text;
         invalidate();
@@ -128,12 +131,14 @@ public class TextView extends View {
         Log.e("LJT", "widthSize ----> " + widthSize);
         Log.e("LJT", "measureText ----> " + mPaint.measureText(mText));
 
+        bounds = new Rect();
+        mPaint.getTextBounds(mText, 0, mText.length(), bounds);
 
         setMeasuredDimension(widthSize, heightSize);
 
     }
 
-    @Override
+        @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -176,21 +181,27 @@ public class TextView extends View {
         int dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
         int baseLine = getHeight() / 2 + dy;
 
-
-        Log.e("ljt", metrics.toString());
-
-        canvas.drawText(mText, getPaddingLeft(), baseLine, mPaint);
-
-
         // 计算文字BaseLine
         float textBaseY = getHeight() / 2 + (Math.abs(mPaint.ascent()) - mPaint.descent()) / 2;
-        canvas.drawText(mText, getPaddingLeft(), textBaseY, mPaint);
+
+//        canvas.drawText(mText, getPaddingLeft(), baseLine, mPaint);
+
+            Log.e("LJT", " textBaseY ---> " + textBaseY);
+            Log.e("LJT", " baseLine ---> " + baseLine);
+            Log.e("LJT", " -bounds.top ---> " + -bounds.top);
+            Log.e("LJT", " bounds ---> " + bounds.toShortString());
+
+
+        canvas.drawText(mText, -bounds.left + getPaddingLeft(), -bounds.top + getPaddingTop(), mPaint);
+
+//        canvas.drawText(mText, 0 + getPaddingLeft(), -bounds.top + getPaddingTop(), mPaint);
+
     }
 
 //    @Override
 //    protected void dispatchDraw(Canvas canvas) {
 //        super.dispatchDraw(canvas);
-//
+//:
 //
 //        Paint.FontMetricsInt metrics = mPaint.getFontMetricsInt();
 //        int dy = (metrics.bottom - metrics.top) / 2 - metrics.bottom;
