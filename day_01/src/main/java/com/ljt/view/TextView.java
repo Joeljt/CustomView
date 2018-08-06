@@ -120,6 +120,10 @@ public class TextView extends View {
 
         }
 
+        Log.e("LJT", "widthSize ----> " + widthSize);
+        Log.e("LJT", "measureText ----> " + mPaint.measureText(mText));
+
+
         setMeasuredDimension(widthSize, heightSize);
 
     }

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CustomView.iml" filepath="$PROJECT_DIR$/CustomView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CustomView.iml" filepath="$PROJECT_DIR$/CustomView.iml" />
       <module fileurl="file://D:\code\learn_space\CustomView\.idea\CustomView.iml" filepath="D:\code\learn_space\CustomView\.idea\CustomView.iml" />
       <module fileurl="file://D:\code\learn_space\CustomView\day_01\app.iml" filepath="D:\code\learn_space\CustomView\day_01\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/day_01/day_01.iml" filepath="$PROJECT_DIR$/day_01/day_01.iml" />
@@ -11,8 +10,6 @@
       <module fileurl="file://$PROJECT_DIR$/day_03/day_03.iml" filepath="$PROJECT_DIR$/day_03/day_03.iml" />
       <module fileurl="file://$PROJECT_DIR$/day_04/day_04.iml" filepath="$PROJECT_DIR$/day_04/day_04.iml" />
       <module fileurl="file://$PROJECT_DIR$/day_05/day_05.iml" filepath="$PROJECT_DIR$/day_05/day_05.iml" />
-      <module fileurl="file://$PROJECT_DIR$/day_05/day_05.iml" filepath="$PROJECT_DIR$/day_05/day_05.iml" />
-      <module fileurl="file://$PROJECT_DIR$/day_06/day_06.iml" filepath="$PROJECT_DIR$/day_06/day_06.iml" />
       <module fileurl="file://$PROJECT_DIR$/day_06/day_06.iml" filepath="$PROJECT_DIR$/day_06/day_06.iml" />
     </modules>
   </component>

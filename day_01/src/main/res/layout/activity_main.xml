@@ -12,28 +12,27 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#ff0000"
-        android:padding="10dp"
         app:JoeText="河南Darren"
         app:JoeTextColor="@android:color/white"
         app:JoeTextSize="30sp"/>
 
-    <com.ljt.view.TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        app:JoeText="李佳腾"
-        app:JoeTextColor="@android:color/black"
-        app:JoeTextSize="30sp"/>
+    <!--<com.ljt.view.TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--app:JoeText="李佳腾"-->
+        <!--app:JoeTextColor="@android:color/black"-->
+        <!--app:JoeTextSize="30sp"/>-->
 
-    <com.ljt.view.TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        app:JoeText="lijiateng"
-        app:JoeTextColor="@android:color/black"
-        app:JoeTextSize="50sp"/>
+    <!--<com.ljt.view.TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--app:JoeText="lijiateng"-->
+        <!--app:JoeTextColor="@android:color/black"-->
+        <!--app:JoeTextSize="50sp"/>-->
 
     <TextView
         android:layout_width="wrap_content"
