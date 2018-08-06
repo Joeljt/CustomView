@@ -82,6 +82,11 @@ public class TextView extends View {
 
     }
 
+    public void setText(String text) {
+        mText = text;
+        invalidate();
+    }
+
     private int sp2px(int sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 sp, getResources().getDisplayMetrics());
