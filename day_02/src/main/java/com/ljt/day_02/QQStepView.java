@@ -138,7 +138,10 @@ public class QQStepView extends View {
     }
 
     private int px2sp(int sp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                sp,
+                getResources().getDisplayMetrics());
     }
 
     public synchronized void setMaxStep(int maxStep) {

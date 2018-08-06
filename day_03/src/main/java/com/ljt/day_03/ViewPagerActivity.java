@@ -113,6 +113,7 @@ public class ViewPagerActivity extends AppCompatActivity {
             view.setChangeColor(Color.RED);
             view.setText(items[i]);
             view.setLayoutParams(params);
+//            view.setBackgroundColor(Color.parseColor("#00FF00"));
 
             // 加入容器布局
             mIndicatorContainer.addView(view);

@@ -125,6 +125,8 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
         int x = getWidth() / 2 - textBounds.width() / 2;
         int y = getHeight() / 2 + (metrics.bottom - metrics.top) / 2 - metrics.bottom;
         canvas.drawText(text, x, y, paint);
+//
+//        canvas.drawText(text, -textBounds.left+x, -textBounds.top+getHeight()/2, paint);
 
         // 清空画布属性，方便接下来绘制变色的部分
         canvas.restore();
