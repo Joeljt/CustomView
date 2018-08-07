@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -97,8 +98,20 @@ public class LetterSlideBar extends View {
             Paint.FontMetricsInt fontMetricsInt = mLetterPaint.getFontMetricsInt();
             int dy = (fontMetricsInt.bottom - fontMetricsInt.top) / 2 - fontMetricsInt.bottom;
             int y = i * itemHeight + itemHeight / 2 + dy;
+//            canvas.drawText(mLetters[i], x, y, mLetterPaint);
 
-            canvas.drawText(mLetters[i], x, y, mLetterPaint);
+//            Rect bounds = new Rect();
+//            mLetterPaint.getTextBounds(mLetters[i], 0, mLetters[i].length(), bounds);
+//
+//            x = getWidth() / 2 - bounds.width() / 2 - bounds.left;
+//            y = i * itemHeight - bounds.top + getPaddingTop();
+//
+//            Log.e("LJT", String.format("first y is %d, second y is %d, itemHeight is %d",
+//                    i * itemHeight + itemHeight / 2 + dy,
+//                    i * itemHeight - bounds.top,
+//                    itemHeight));
+
+//            canvas.drawText(mLetters[i], x, y, mLetterPaint);
 
             // 使用不同的画笔，完成界面的更新
             if (mCurrPos == i) {
