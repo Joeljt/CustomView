@@ -7,14 +7,15 @@
     android:orientation="vertical"
     tools:context="com.ljt.day_03.MainActivity">
 
-    <com.ljt.day_03.ColorTrackTextView
+    <com.ljt.day_03.ColorTextView
         android:id="@+id/tv_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="lijiateng"
         android:layout_gravity="center"
         android:textSize="30sp"
-        app:change_color="@android:color/holo_red_light"
+        android:background="@color/colorAccent"
+        app:change_color="@android:color/holo_blue_dark"
         app:origin_color="@android:color/black"/>
 
     <LinearLayout

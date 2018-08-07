@@ -12,11 +12,10 @@ import android.widget.TextView;
 
 /**
  * Created by lijiateng on 2018/7/26.
- *
+ * <p>
  * 主要技术点：
- *  利用 canvas.clipRect() 方法，不断地去改变切割点，
- *  然后用两个不同颜色的画笔对两侧进行绘制，从而实现一个文本两种颜色的效果
- *
+ * 利用 canvas.clipRect() 方法，不断地去改变切割点，
+ * 然后用两个不同颜色的画笔对两侧进行绘制，从而实现一个文本两种颜色的效果
  */
 
 public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextView {
@@ -31,7 +30,7 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
         mChangePaint.setColor(color);
     }
 
-    public enum Direction{
+    public enum Direction {
         LEFT_TO_RIGHT,
         RIGHT_TO_LEFT
     }
@@ -124,9 +123,9 @@ public class ColorTrackTextView extends android.support.v7.widget.AppCompatTextV
         // 获取起始位置
         int x = getWidth() / 2 - textBounds.width() / 2;
         int y = getHeight() / 2 + (metrics.bottom - metrics.top) / 2 - metrics.bottom;
-        canvas.drawText(text, x, y, paint);
-//
-//        canvas.drawText(text, -textBounds.left+x, -textBounds.top+getHeight()/2, paint);
+//        canvas.drawText(text, x, y, paint);
+
+        canvas.drawText(text, -textBounds.left + x, -textBounds.top + (getHeight() / 2 - textBounds.height() / 2), paint);
 
         // 清空画布属性，方便接下来绘制变色的部分
         canvas.restore();
