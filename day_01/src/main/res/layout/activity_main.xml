@@ -26,6 +26,7 @@
         app:JoeTextSize="30sp"/>
 
     <com.ljt.view.TextView
+        android:id="@+id/tv_test"
         android:background="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
