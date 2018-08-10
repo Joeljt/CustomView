@@ -128,7 +128,12 @@ public void addView(View child, int index, LayoutParams params) {
 }
 ```
 
-说出来你可能不信，但是 setContentView() 到这里就差不多结束了
+说出来你可能不信，但是 setContentView() 到这里就差不多结束了。
+
+很明显，我们并没有发现任何关于 View 的测量的代码，最后的 requestLayout() 和 invalidate() 也和 View 的 measure() 关系不大，毕竟还没测量，哪里谈得上 layout 和 draw 呢？
+
+所以， setContentView() 和 View 的测量没啥关系，那么在其之后获取 View 宽高也就自然获取不到值了。
+
 
 
 
