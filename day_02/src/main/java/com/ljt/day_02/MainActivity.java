@@ -2,10 +2,8 @@ package com.ljt.day_02;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.animation.DecelerateInterpolator;
+import android.support.v7.app.AppCompatActivity;
 import android.view.animation.OvershootInterpolator;
 
 public class MainActivity extends AppCompatActivity {

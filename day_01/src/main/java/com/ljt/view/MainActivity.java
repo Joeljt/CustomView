@@ -3,10 +3,6 @@ package com.ljt.view;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-
-import com.ljt.view.test.MyAdapter;
-import com.ljt.view.test.MyListView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,4 +31,13 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.e("LJT", "onResume ---- > " + mTv.getHeight());
     }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Log.e("LJT", "onAttachedToWindow ---- > " + mTv.getHeight());
+    }
+
+
+
 }
