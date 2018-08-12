@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTv = findViewById(R.id.tv_test);
+//        mTv = findViewById(R.id.tv_test);
 
         Log.e("LJT", "onCreate ---- > " + mTv.getHeight());
 
@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("LJT", "post ---- > " + mTv.getHeight());
             }
         });
+
 
     }
 

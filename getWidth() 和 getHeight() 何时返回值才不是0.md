@@ -15,12 +15,6 @@ public class MainActivity extends AppCompatActivity {
 
         mTv.getHeight(); // 0
 
-        mTv.post(new Runnable() {
-            @Override
-            public void run() {
-                 mTv.getHeight(); // 可以正常获取到宽高
-            }
-        });
     }
 
     @Override
