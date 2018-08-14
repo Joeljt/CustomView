@@ -54,29 +54,29 @@ public class MainActivity extends AppCompatActivity {
             protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
                 super.onLayout(changed, left, top, right, bottom);
 
-                Log.e("View", "执行了onLayout()");
+                Log.e("Test", "执行了onLayout()");
 
             }
 //        };
 
-            @Override
-            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-                Log.e("View", "执行了onMeasure()");
-            }
-
-            @Override
-            protected void onDraw(Canvas canvas) {
-                super.onDraw(canvas);
-                Log.e("View", "执行了onDraw()");
-            }
+//            @Override
+//            protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//                Log.e("LJT", "执行了onMeasure()");
+//            }
+//
+//            @Override
+//            protected void onDraw(Canvas canvas) {
+//                super.onDraw(canvas);
+//                Log.e("LJT", "执行了onDraw()");
+//            }
         };
 
         // 根据源码来看，mAttachInfo 还为空，这里会交给 Handler 来处理
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                Log.e("View", "mHandler.post ---- > " + Thread.currentThread().getId());
+                Log.e("Test", "mHandler.post ---- > " + view.getHeight());
             }
         });
 
@@ -84,26 +84,26 @@ public class MainActivity extends AppCompatActivity {
         view.post(new Runnable() {
             @Override
             public void run() {
-//                Log.e("LJT", "view.post ---- > " + view.getHeight());
-                Log.e("View", "view.post ---- > " +  Thread.currentThread().getId());
+                Log.e("Test", "view.post ---- > " + view.getHeight());
+//                Log.e("View", "view.post ---- > " +  Thread.currentThread().getId());
             }
         });
-//
+
 //        new Thread(){
 //            @Override
 //            public void run() {
 //
-//                Log.e("LJT", "new Thread run()");
-//
-//                view.post(new Runnable() {
+//                boolean post = view.post(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        Log.e("LJT", "new Thread view.post ---- > " + view.getHeight());
+//                        Log.e("LJT", "onCreate new Thread view.post ---- > " + view.getHeight());
 //                    }
 //                });
+//
+//                Log.e("LJT", "onCreate new Thread run() : " + post);
 //            }
 //        }.start();
-//
+
         viewGroup.addView(view);
 
     }
@@ -112,48 +112,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Log.e("LJT", "onResume() ---> " + view.getHeight());
-//
-//        new Thread() {
+//        Log.e("LJT", "onResume() ---> " + view.getHeight());
+
+//        new Thread(){
 //            @Override
 //            public void run() {
 //
-//                Log.e("LJT", "onResume new Thread run()");
-//
-//
-//                view.post(new Runnable() {
+//                boolean post = view.post(new Runnable() {
 //                    @Override
 //                    public void run() {
 //                        Log.e("LJT", "onResume view.post ---- > " + view.getHeight());
 //                    }
 //                });
+//
+//                Log.e("LJT", "onResume new Thread run() : " + post);
+//
 //            }
 //        }.start();
-
-
 
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-
-        Log.e("LJT", "onAttachedToWindow() ---> " + view.getHeight());
 //
 //        new Thread(){
 //            @Override
 //            public void run() {
 //
-//                Log.e("LJT", "onAttachedToWindow new Thread run()");
-//
-//
-//
-//                view.post(new Runnable() {
+//                boolean post = view.post(new Runnable() {
 //                    @Override
 //                    public void run() {
 //                        Log.e("LJT", "onAttachedToWindow view.post ---- > " + view.getHeight());
 //                    }
 //                });
+//
+//                Log.e("LJT", "onAttachedToWindow new Thread run() : " + post);
+//
 //            }
 //        }.start();
 

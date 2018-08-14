@@ -1,6 +1,25 @@
 ## View#post 浅析
 
-之前的文章里写到过，我们在 onCreate() 和 onResume() 方法中无法获取 View 的宽高信息，但在平时开发中，我们经常会用到 View#post 来进行宽高信息的获取，具体代码如下：
+### 序
+
+之前的文章里写到过，我们在 onCreate() 和 onResume() 方法中无法获取 View 的宽高信息，但在平时开发中，我们经常会用到 View#post 来进行 View 宽高信息的获取。
+
+那么问题就来了，为什么 View#post 就可以获取到宽高信息？里边那个 run() 是在什么时候执行的？具体实现原理又是什么？
+
+带着这些疑问，我最近研究了一下 View#post 的源码。本来以为挺简单的一个东西，但是没想到坑越挖越深，最过分的是，不同的版本源码还不相同，实现原理也有细微的差别。集中攻克了一个周末以后，感觉大概理解了，索性写下篇博客进行记录备忘。
+
+文章大概分为以下几个方面：
+
+- View#post 基本使用
+- post() 执行过程以及源码分析
+- post() 中 Runnable#run 执行的时机
+- View#post 整体流程的简单总结
+- Android 7.0 里 View#post 的变动以及原因
+- 致谢
+
+### View#post 基本使用
+
+具体代码如下：
 
 ```java
 @Override
@@ -18,14 +37,15 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 ```
 
-具体的实现原理是怎样的呢？这里我们以 API 26 为例，来尝试解答一下这个问题。
+这里我们以 API 26 为例，来尝试解答一下这个问题。
 
 实际上，Android 系统以 API 24 为界，之前之后的版本，对此处的实现有细微的差别，具体的改动以及原因在后文会一一给出分析。
 
 
 
-### post() 里做了什么
+### post() 执行过程以及源码分析
 
+#### 1. View#post 入口
 先来看 View#post 源码，重点注意注释：
 
 ```java
@@ -90,7 +110,7 @@ private HandlerActionQueue getRunQueue() {
 
 
 
-### HandlerActionQueue 是什么
+#### 2. HandlerActionQueue 又是个啥
 
 很明显，执行 post 方法的是 HandlerActionQueue 对象，那这又是个什么东西：
 
@@ -149,11 +169,11 @@ public class HandlerActionQueue {
 
 接下来，我们来追踪这个方法的调用情况。
 
-![executeActions() 的调用情况](http://p5zd0id9p.bkt.clouddn.com/18-8-12/46072598.jpg)
+![executeActions() 的调用情况](http://upload-images.jianshu.io/upload_images/5419805-e0cf86fbea081bc9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 我们注意到，对于该方法出现了两次调用，一次在 View#dispatchAttachToWindow（就是我们最开始找到的那个方法），另一次是在 ViewRootImpl#performTraversals。
 
-### performTraversals()
+#### 3. 万恶之源 performTraversals()
 
 很明显，所有的证据都指向了 performTraversals ，那么下面我们就来重点分析一下这个方法。
 
@@ -260,7 +280,7 @@ private HandlerActionQueue getRunQueue() {
 
 
 
-### Runnable#run 执行的时机
+### View#post 中 Runnable#run 执行的时机
 
 但现在的问题是，无论怎么说，**HandlerActionQueue#executeActions 都是先于 View 测绘流程的**，为什么在还没有完成测量的时候，就可以拿到宽高信息？
 
@@ -281,23 +301,9 @@ protected void onCreate(Bundle savedInstanceState) {
     // 等待 Add 到父布局中
     view = new View(this) {
         @Override
-        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        protected void onLayout( ... ... ) {
             super.onLayout(changed, left, top, right, bottom);
-
-            Log.e("LJT", "执行了onLayout()");
-
-        }
-
-        @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            Log.e("LJT", "执行了onMeasure()");
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-            Log.e("LJT", "执行了onDraw()");
+            Log.e("Test", "执行了onLayout()");
         }
     };
 
@@ -305,7 +311,7 @@ protected void onCreate(Bundle savedInstanceState) {
     mHandler.post(new Runnable() {
         @Override
         public void run() {
-            Log.e("LJT", "mHandler.post ---- > " + view.getHeight());
+            Log.e("Test", "mHandler.post ---- > " + view.getHeight());
         }
     });
 
@@ -314,12 +320,99 @@ protected void onCreate(Bundle savedInstanceState) {
     view.post(new Runnable() {
         @Override
         public void run() {
-            Log.e("LJT", "view.post ---- > " + view.getHeight());
+            Log.e("Test", "view.post ---- > " + view.getHeight());
         }
     });
 
     viewGroup.addView(view);
-
 }
 ```
+
+最终打印日志如下：
+
+![image](http://upload-images.jianshu.io/upload_images/5419805-ec13fe6929791de9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+也就是说：
+
+1. Handler#post 首先执行，其 post 的时间点在 onCreate() 方法内，在消息队列中的位置一定比 performTraversals() 靠前；
+2. ViewRootImpl#performTraversal 执行，过程中执行了 View#dispatchAttachedToWindow 方法，将最初的 Runnable 入队后进行测量流程，完成了 layout 过程；
+3. 之后才执行了最初的 View#post 方法，也就说明了，在 View#dispatchAttachedToWindow 中使用 ViewRootImpl 的 Handler postDelay 的 Runnable 对象，在主线程消息队列中，确实是排在 ViewRootImpl#performTraversal 之后的
+
+### View#post 整体流程的简单总结
+
+最后大概总结一下：
+
+当我们使用 View#post 时，会有两种情况：
+
+1. 在当前 View attach 到 Window 之前，会自己先维护一个 HandlerActionQueue 对象，用来存储当前的 Runnable 对象，然后等到 Attach 到 Window 的时候 (也就是 ViewRootImpl 执行到 performTraversal 方法时) ，会统一将 Runnable 转交给 ViewRootImpl 处理；
+2. 而在 View#dispatchAttachedToWindow 时，也会为当前 View 初始化一个 AttachInfo 对象，该对象持有 ViewRootImpl 的引用，当 View 有此对象后，后续的所有 Runnable 都将直接交给 ViewRootImpl 处理；
+3. 而 ViewRootImpl 也会在执行 performTraversal 方法，也会调用 ViewRootImpl#getRunQueue ，利用 ThreadLocal 来为主线程维护一个 HandlerActionQueue 对象，至此，ViewRootImpl 内部都将使用该队列来进行 Runnable 任务的短期维护；
+4. 但需要注意的是，各个 View 调用的 post 方法，仍然是由各自的 HandlerActionQueue 对象来入队任务的，然后在 View#dispatchAttachedToWindow 的时候转移给 ViewRootImpl 去处理。
+
+
+
+### Android 7.0 里 View#post 的变动以及原因
+
+View#post 说到这里大概就差不多了，文章开篇的时候说到：
+
+> Android 系统以 API 24 为界，之前之后的版本，对此处的实现有细微的差别
+
+下面来简单对比一下具体的差别，顺便分析一下具体为什么要这样改动。
+
+实际上这个方法的改动主要是为了解决一个 bug，这个 bug 就是：**在 View 被 attach 到 window 之前，从子线程调用的 View#post ，永远无法得到执行。**
+
+具体原因，我们来看一下 API23 版本的 View#post，就大概都明白了：
+
+```java
+// Android API23 View#post
+public boolean post(Runnable action) {
+    final AttachInfo attachInfo = mAttachInfo;
+    if (attachInfo != null) {
+        return attachInfo.mHandler.post(action);
+    }
+    // Assume that post will succeed later
+    // 注意此处，不同于我们之前介绍的，这里是直接使用 ViewRootImpl#getRunQueue 来入队任务的
+    ViewRootImpl.getRunQueue().post(action);
+    return true;
+}
+```
+
+我们可以看到，不同于我们之前介绍的，API23 版本中，View#post 在没有 attach 到 window 之前，也就是 mAttachInfo 是 null 的时候，不是自己维护任务队列，而是直接使用 ViewRootImpl#getRunQueue 来入队任务的。
+
+再来看一下 ViewRootImpl#getRunQueue 方法，我们就会发现问题出在哪里了：
+
+```java
+static final ThreadLocal<RunQueue> sRunQueues = new ThreadLocal<RunQueue>();
+static RunQueue getRunQueue() {
+    RunQueue rq = sRunQueues.get();
+    if (rq != null) {
+        return rq;
+    }
+    rq = new RunQueue();
+    sRunQueues.set(rq);
+    return rq;
+}
+```
+
+没错，这个队列的保存与获取，是通过以线程为 key 值来存取对象 ThreadLocal 来维护的。而在这个版本的源码中，executeActions() 方法的执行，只有一次调用，那就是 ViewRootImpl#performTraversal 中（感兴趣的可以去 23 版本的源码中查看，这里就不贴图了），与此同时，该方法肯定是执行在主线程中的。
+
+现在的问题就变成了：**我在子线程中 post 了一个 runnable，并且系统以该子线程为 key 将队列存了起来等待执行；但是在具体执行的时候，系统却是去主线程中寻找待执行的 Runnable，那么当然是永远都得不到执行的了。**
+
+而在**具体 attach 到 window 之后**，View 的 mAttachInfo 持有 ViewRootImpl 引用，会直接将所有的 Runnable 转交给 ViewRootImpl 的 Handler 处理，也**就都能得到妥善处理，就与线程无关了。**
+
+除此以外，ViewRootImpl 使用 ThreadLocal 来存储队列信息，在某些情境下，还会导致内存泄漏。详细信息可以参考：https://blog.csdn.net/a740169405/article/details/69668957
+
+所以，**Google 工程师为了解决这两个问题（内存泄漏的问题更严重一些），就在 View#post 方法中使用 View 对象来进行队列的存储，然后在 attach 到 window 的时候，通过持有 ViewRootImpl 引用的 AttachInfo 对象直接将 View 对象的 Runnable 处理掉，就完美解决了这些问题。**
+
+
+
+### 致谢
+
+下边是自己研究的时候具体参考过的文章，给各位前辈加个鸡腿：
+
+##### https://blog.csdn.net/a740169405/article/details/69668957
+
+##### https://blog.csdn.net/scnuxisan225/article/details/49815269
+
+##### https://www.cnblogs.com/plokmju/p/7481727.html
 
