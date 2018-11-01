@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CustomView.iml" filepath="$PROJECT_DIR$/CustomView.iml" />
       <module fileurl="file://D:\code\learn_space\CustomView\.idea\CustomView.iml" filepath="D:\code\learn_space\CustomView\.idea\CustomView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CustomView-master.iml" filepath="$PROJECT_DIR$/CustomView-master.iml" />
       <module fileurl="file://D:\code\learn_space\CustomView\day_01\app.iml" filepath="D:\code\learn_space\CustomView\day_01\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/day_01/day_01.iml" filepath="$PROJECT_DIR$/day_01/day_01.iml" />
       <module fileurl="file://$PROJECT_DIR$/day_02/day_02.iml" filepath="$PROJECT_DIR$/day_02/day_02.iml" />
