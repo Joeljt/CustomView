@@ -7,14 +7,13 @@
     android:orientation="vertical"
     tools:context="com.ljt.day_03.MainActivity">
 
-    <com.ljt.day_03.ColorTextView
+    <com.ljt.day_03.ColorTrackTextView
         android:id="@+id/tv_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="lijiateng"
         android:layout_gravity="center"
         android:textSize="30sp"
-        android:background="@color/colorAccent"
         app:change_color="@android:color/holo_blue_dark"
         app:origin_color="@android:color/black"/>
 
@@ -37,5 +36,19 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+
+    <com.ljt.day_03.MyLinearLayout
+        android:orientation="vertical"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content">
+
+        <com.ljt.day_03.MyTextView
+            android:id="@+id/tv_measure"
+            android:text="lijiateng"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+    </com.ljt.day_03.MyLinearLayout>
 
 </LinearLayout>
