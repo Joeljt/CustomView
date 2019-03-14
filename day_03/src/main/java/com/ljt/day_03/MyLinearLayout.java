@@ -55,8 +55,28 @@ public class MyLinearLayout extends LinearLayout {
                     returnSize = sizeWithoutPadding;
                     returnMode = MeasureSpec.EXACTLY;
                 } else if (size == LayoutParams.WRAP_CONTENT) {
-
+                    // 子布局要包裹内容，那就让它尽量大就可以，但是 size 不能超过父布局
+                    returnSize = size;
+                    returnMode = MeasureSpec.AT_MOST;
                 }
+                break;
+
+            case MeasureSpec.AT_MOST:
+                // AT_MOST 说明父布局是包裹内容，自己也不知道自己多大
+                if (childDimension >= 0) {
+                    // 子布局知道自己多大，那就让它那么大；而且已经知道自己多大了，那就是 EXACTLY
+                    returnSize = childDimension;
+                    returnMode = MeasureSpec.EXACTLY;
+                } else if (size == LayoutParams.MATCH_PARENT) {
+                    // 子布局想和父布局一样大，那就一样大
+                    returnSize = size;
+                    returnMode = MeasureSpec.AT_MOST;
+                } else if (size == LayoutParams.WRAP_CONTENT) {
+                    // 子布局要包裹内容，但是父布局并不知道自己多大，那就尽量大就好
+                    returnSize = size;
+                    returnMode = MeasureSpec.AT_MOST;
+                }
+                break;
         }
 
     }
@@ -74,6 +94,7 @@ public class MyLinearLayout extends LinearLayout {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);Log.e("LJT", "MyLinearLayout onDraw: " + canvas.getWidth());
+        super.dispatchDraw(canvas);
+        Log.e("LJT", "MyLinearLayout onDraw: " + canvas.getWidth());
     }
 }
