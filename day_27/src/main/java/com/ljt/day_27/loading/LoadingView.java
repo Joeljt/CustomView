@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -134,8 +135,9 @@ public class LoadingView extends View {
             // 考虑使用属性动画实现，从 0 变化到 360，过程中不断重绘
             canvas.drawColor(Color.WHITE);
 
-            // 得到每个扇形的角度
+            // 得到每个扇形的弧度  2π = 圆周长
             double percentAngle = Math.PI * 2 / mColorArray.length;
+
 
             for (int i = 0; i < mColorArray.length; i++) {
 

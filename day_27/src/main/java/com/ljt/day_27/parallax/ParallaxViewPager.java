@@ -66,8 +66,8 @@ public class ParallaxViewPager extends ViewPager {
                 List<View> outFragmentParallaxViews = outFragment.getParallaxViews();
                 for (View view : outFragmentParallaxViews) {
                     ParallaxTag parallaxTag = (ParallaxTag) view.getTag(R.id.parallax_tag);
-                    view.setTranslationX(( -positionOffsetPixels) * parallaxTag.getxOut());
-                    view.setTranslationY(( -positionOffsetPixels) * parallaxTag.getyOut());
+                    view.setTranslationX((-positionOffsetPixels) * parallaxTag.getxOut());
+                    view.setTranslationY((-positionOffsetPixels) * parallaxTag.getyOut());
                 }
 
                 try {
@@ -78,7 +78,8 @@ public class ParallaxViewPager extends ViewPager {
                         view.setTranslationX((getMeasuredWidth() - positionOffsetPixels) * parallaxTag.getxIn());
                         view.setTranslationY((getMeasuredWidth() - positionOffsetPixels) * parallaxTag.getyIn());
                     }
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
 
             }
 

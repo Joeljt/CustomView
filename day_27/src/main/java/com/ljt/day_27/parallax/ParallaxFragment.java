@@ -71,44 +71,44 @@ public class ParallaxFragment extends Fragment implements LayoutInflaterFactory 
         return view;
     }
 
-    private void analysisAttrs(View view, Context context, AttributeSet attrs) {
-        TypedArray array = context.obtainStyledAttributes(attrs, mParallaxAttrs);
+private void analysisAttrs(View view, Context context, AttributeSet attrs) {
+    TypedArray array = context.obtainStyledAttributes(attrs, mParallaxAttrs);
 
-        // 主动去解析自定义的几个属性，如果能够拿到，就去遍历解析
-        if (array != null && array.getIndexCount() != 0) {
+    // 主动去解析自定义的几个属性，如果能够拿到，就去遍历解析
+    if (array != null && array.getIndexCount() != 0) {
 
-            ParallaxTag parallaxTag = new ParallaxTag();
-            for (int i = 0; i < array.getIndexCount(); i++) {
+        ParallaxTag parallaxTag = new ParallaxTag();
+        for (int i = 0; i < array.getIndexCount(); i++) {
 
-                int arrayIndex = array.getIndex(i);
+            int arrayIndex = array.getIndex(i);
 
-                switch (arrayIndex) {
-                    case 0:
-                        parallaxTag.setxIn(array.getFloat(arrayIndex, 0f));
-                        break;
-                    case 1:
-                        parallaxTag.setxOut(array.getFloat(arrayIndex, 0f));
-                        break;
-                    case 2:
-                        parallaxTag.setyIn(array.getFloat(arrayIndex, 0f));
-                        break;
-                    case 3:
-                        parallaxTag.setyOut(array.getFloat(arrayIndex, 0f));
-                        break;
-
-                }
-
-                // 要紧的问题是，解析到了以后怎么存 -> 给 View 设置 tag
-                view.setTag(R.id.parallax_tag, parallaxTag);
-
-                // 将准备操作的 View 放入集合中
-                mParallaxViews.add(view);
+            switch (arrayIndex) {
+                case 0:
+                    parallaxTag.setxIn(array.getFloat(arrayIndex, 0f));
+                    break;
+                case 1:
+                    parallaxTag.setxOut(array.getFloat(arrayIndex, 0f));
+                    break;
+                case 2:
+                    parallaxTag.setyIn(array.getFloat(arrayIndex, 0f));
+                    break;
+                case 3:
+                    parallaxTag.setyOut(array.getFloat(arrayIndex, 0f));
+                    break;
 
             }
 
-            array.recycle();
+            // 要紧的问题是，解析到了以后怎么存 -> 给 View 设置 tag
+            view.setTag(R.id.parallax_tag, parallaxTag);
+
+            // 将准备操作的 View 放入集合中
+            mParallaxViews.add(view);
+
         }
+
+        array.recycle();
     }
+}
 
     public View createView(View parent, final String name, Context context,
                            AttributeSet attrs) {

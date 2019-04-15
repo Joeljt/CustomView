@@ -9,7 +9,7 @@
     <color name="yellow">#FFD200</color>
     <color name="blue">#00C6FF</color>
     <color name="green">#00E099</color>
-    <color name="pink">#FF3891</color>
+    <color name="pink">#5F36E2</color>
 
     <array name="splash_circle_colors">
         <item>@color/blue</item>
@@ -18,5 +18,6 @@
         <item>@color/orange</item>
         <item>@color/aqua</item>
         <item>@color/yellow</item>
+
     </array>
 </resources>
