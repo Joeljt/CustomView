@@ -1,6 +1,7 @@
 package com.ljt.day_22;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class MyMenuAdapter extends BaseMenuAdapter {
     public View getTabView(int position, ViewGroup parent) {
         TextView tabView = (TextView) mInflater.inflate(R.layout.ui_list_data_screen_tab, parent, false);
         tabView.setText(mTabTitles[position]);
+        tabView.setTextColor(Color.BLACK);
         return tabView;
     }
 
@@ -42,4 +44,17 @@ public class MyMenuAdapter extends BaseMenuAdapter {
         menuView.setText(mTabTitles[position]);
         return menuView;
     }
+
+    @Override
+    public void onMenuOpened(View tabView) {
+        TextView textView = (TextView) tabView;
+        textView.setTextColor(Color.RED);
+    }
+
+    @Override
+    public void onMenuClosed(View tabView) {
+        TextView textView = (TextView) tabView;
+        textView.setTextColor(Color.BLACK);
+    }
+
 }

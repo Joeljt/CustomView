@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 /**
  * Created by JoeLjt on 2019/4/16.
@@ -42,6 +41,7 @@ public class ListDataScreenView extends LinearLayout{
     private int mCurrPosition = -1;
 
     private boolean isExecutingAnimator;
+    private BaseMenuAdapter mMenuAdapter;
 
     public ListDataScreenView(Context context) {
         this(context, null);
@@ -60,6 +60,11 @@ public class ListDataScreenView extends LinearLayout{
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+        // 设置 View 为 Gone 后，会触发重绘，会导致页面位置出现问题
+        if (mMenuContainerHeight != 0) {
+            return;
+        }
+
         int height = MeasureSpec.getSize(heightMeasureSpec);
         mMenuContainerHeight = (int) (height * 0.75);
         ViewGroup.LayoutParams layoutParams = mMenuContainerView.getLayoutParams();
@@ -70,6 +75,7 @@ public class ListDataScreenView extends LinearLayout{
     }
 
     public void setMenuAdapter(BaseMenuAdapter adapter) {
+        mMenuAdapter = adapter;
         initDataFromAdapter(adapter);
     }
 
@@ -111,8 +117,23 @@ public class ListDataScreenView extends LinearLayout{
                     return;
                 }
 
-                if (mCurrPosition != -1) {
+                // 当前点击的就是已经打开的菜单页，那就关闭菜单
+                if (mCurrPosition == position) {
                     closeMenu();
+                }
+
+                // 否则就直接切换页面即可
+                if (mCurrPosition != position) {
+                    // 把当前正显示的页面隐藏
+                    View currOpenedMenu = mMenuContainerView.getChildAt(mCurrPosition);
+                    currOpenedMenu.setVisibility(GONE);
+                    mMenuAdapter.onMenuClosed(mMenuTabLayout.getChildAt(mCurrPosition));
+
+                    View targetMenu = mMenuContainerView.getChildAt(position);
+                    targetMenu.setVisibility(VISIBLE);
+                    mMenuAdapter.onMenuOpened(mMenuTabLayout.getChildAt(position));
+
+                    mCurrPosition = position;
                 }
 
             }
@@ -137,6 +158,7 @@ public class ListDataScreenView extends LinearLayout{
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+
                 // 收起菜单后设置文字信息隐藏，否则会重叠
                 View view = mMenuContainerView.getChildAt(mCurrPosition);
                 view.setVisibility(GONE);
@@ -148,6 +170,7 @@ public class ListDataScreenView extends LinearLayout{
             @Override
             public void onAnimationStart(Animator animation) {
                 isExecutingAnimator = true;
+                mMenuAdapter.onMenuClosed(mMenuTabLayout.getChildAt(mCurrPosition));
             }
 
         });
@@ -163,7 +186,7 @@ public class ListDataScreenView extends LinearLayout{
      * @param position
      * @param tabView
      */
-    private void openMenu(int position, View tabView) {
+    private void openMenu(int position, final View tabView) {
 
         if (isExecutingAnimator) {
             return;
@@ -188,6 +211,7 @@ public class ListDataScreenView extends LinearLayout{
             @Override
             public void onAnimationStart(Animator animation) {
                 isExecutingAnimator = true;
+                mMenuAdapter.onMenuOpened(tabView);
             }
 
             @Override

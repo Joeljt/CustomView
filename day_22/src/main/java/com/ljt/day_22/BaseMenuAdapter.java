@@ -35,4 +35,18 @@ public abstract class BaseMenuAdapter {
      */
     public abstract View getMenuView(int position, ViewGroup parent);
 
+    /**
+     * 菜单打开的回调
+     *
+     * @param tabView
+     */
+    public abstract void onMenuOpened(View tabView);
+
+    /**
+     * 菜单关闭的回调
+     *
+     * @param tabView
+     */
+    public abstract void onMenuClosed(View tabView);
+
 }
