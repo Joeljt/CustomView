@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <com.ljt.day_21.ShapeView
+        android:id="@+id/shape_view"
+        android:layout_marginBottom="100dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <View
+        android:id="@+id/v_shadow"
+        android:background="@drawable/v_shadow_bg"
+        android:layout_width="20dp"
+        android:layout_height="5dp"/>
+
+    <TextView
+        android:text="玩命加载中"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.ljt.day_04;
+package com.ljt.day_21;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,7 +15,7 @@ import android.view.View;
  * Created by lijiateng on 2018/7/29.
  */
 
-public class Easy58View extends View {
+public class ShapeView extends View {
 
     private Paint mPaint;
     private RectF rectF;
@@ -28,15 +28,15 @@ public class Easy58View extends View {
 
     private Shape mCurrShape = Shape.CIRCLE;
 
-    public Easy58View(Context context) {
+    public ShapeView(Context context) {
         this(context, null);
     }
 
-    public Easy58View(Context context, @Nullable AttributeSet attrs) {
+    public ShapeView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public Easy58View(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ShapeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Easy58View);
@@ -131,6 +131,10 @@ public class Easy58View extends View {
 
     public enum Shape{
         CIRCLE, SQUARE, TRIANGLE
+    }
+
+    public Shape getCurrShape() {
+        return mCurrShape;
     }
 
 }
