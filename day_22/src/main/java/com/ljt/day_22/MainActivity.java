@@ -9,5 +9,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ListDataScreenView view = findViewById(R.id.screen_view);
+        view.setMenuAdapter(new MyMenuAdapter(this));
+
+
     }
 }
