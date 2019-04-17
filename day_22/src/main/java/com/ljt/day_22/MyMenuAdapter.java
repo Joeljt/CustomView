@@ -2,6 +2,7 @@ package com.ljt.day_22;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,15 @@ public class MyMenuAdapter extends BaseMenuAdapter {
     public View getMenuView(int position, ViewGroup parent) {
         TextView menuView = (TextView) mInflater.inflate(R.layout.ui_list_data_screen_menu, parent, false);
         menuView.setText(mTabTitles[position]);
+
+        // 真实场景下，选择完某个筛选条件以后，菜单要关闭
+        // ---> 考虑使用观察者模式实现，参考 ListView
+        menuView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeMenu();
+            }
+        });
         return menuView;
     }
 

@@ -13,6 +13,22 @@ import android.view.ViewGroup;
 
 public abstract class BaseMenuAdapter {
 
+    private MenuObserver mMenuObserver;
+
+    public void registerMenuObserver(MenuObserver mMenuObserver) {
+        this.mMenuObserver = mMenuObserver;
+    }
+
+    public void unRegisterMenuObserver(MenuObserver mMenuObserver) {
+        this.mMenuObserver = null;
+    }
+
+    public void closeMenu() {
+        if (mMenuObserver != null) {
+            mMenuObserver.onMenuItemSelected();
+        }
+    }
+
     /**
      * 获取总共多少条
      * @return

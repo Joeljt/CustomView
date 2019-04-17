@@ -43,6 +43,8 @@ public class ListDataScreenView extends LinearLayout{
     private boolean isExecutingAnimator;
     private BaseMenuAdapter mMenuAdapter;
 
+    private MenuObserver menuObserver;
+
     public ListDataScreenView(Context context) {
         this(context, null);
     }
@@ -76,7 +78,20 @@ public class ListDataScreenView extends LinearLayout{
 
     public void setMenuAdapter(BaseMenuAdapter adapter) {
         mMenuAdapter = adapter;
+
+        registerObserver();
+
         initDataFromAdapter(adapter);
+    }
+
+    private void registerObserver() {
+        if (mMenuAdapter != null && menuObserver != null) {
+            mMenuAdapter.unRegisterMenuObserver(menuObserver);
+        }
+
+        menuObserver = new MyMenuObserver();
+        mMenuAdapter.registerMenuObserver(menuObserver);
+
     }
 
     private void initDataFromAdapter(BaseMenuAdapter adapter) {
@@ -107,7 +122,7 @@ public class ListDataScreenView extends LinearLayout{
      * @param position
      * @param tabView
      */
-    private void onTabViewClicked(final int position, final View tabView) {
+    private void onTabViewClicked(final int position, final View tabView)  {
         tabView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,6 +279,13 @@ public class ListDataScreenView extends LinearLayout{
         mMenuContainerView.setBackgroundColor(Color.WHITE);
         mMenuMiddleLayout.addView(mMenuContainerView);
 
+    }
+
+    private class MyMenuObserver implements MenuObserver {
+        @Override
+        public void onMenuItemSelected() {
+            closeMenu();
+        }
     }
 
 }
