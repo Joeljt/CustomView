@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -49,6 +50,8 @@ public class CircleView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+        Log.e("LJT", "CircleView onMeasure()");
+
         int radius = Math.min(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
 
         setMeasuredDimension(radius, radius);
@@ -58,10 +61,13 @@ public class CircleView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         int cx = getWidth() / 2;
-        int cy = getWidth() / 2;
-        int radius = dip2px(8);
+        int cy = getHeight() / 2;
 
-        canvas.drawCircle(cx, cy, radius, mPaint);
+        int radius = dip2px(5); // radius 不能大于 cx/cy，否则会把 circle 画成 square
+
+        Log.e("LJT", String.format("cx is %d, cy is %d, radius is %d", cx, cy, radius));
+
+        canvas.drawCircle(cx, cy, cx, mPaint);
     }
 
     private int dip2px(int dip) {
