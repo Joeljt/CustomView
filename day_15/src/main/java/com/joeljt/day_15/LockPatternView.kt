@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import java.util.jar.Attributes
 
@@ -48,13 +49,33 @@ class LockPatternView : View {
 
     override fun onDraw(canvas: Canvas) {
         if (!mIsInit) {
-            initDots(canvas)
+            initDots()
             initPaint()
             mIsInit = true
         }
 
         drawShow(canvas)
 
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when(event.action){
+
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+
+            MotionEvent.ACTION_UP -> {
+
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+
+            }
+
+        }
+
+        return true
     }
 
     /**
@@ -128,7 +149,7 @@ class LockPatternView : View {
      * 初始化九个点  Point[3][3]
      *
      */
-    private fun initDots(canvas: Canvas?) {
+    private fun initDots() {
         // 九个宫格，存到二维数组中
         // 不断绘制的时候这几个点都有状态，而且后面肯定要回到到每个点，所以每个点都应该有下标，点肯定是一个对象
         // 计算中心位置
@@ -143,14 +164,14 @@ class LockPatternView : View {
             offsetY = (height - width) / 2
             height = width
         } else {
-            offsetY = (width - height) / 2
+            offsetX = (width - height) / 2
             width = height
         }
 
         var squareWidth = width / 3
 
         // 外圆的大小，根据宽度来指定
-        mDotRadius = width / 3
+        mDotRadius = width / 12
 
         mPoints[0][0] = Point(offsetX + squareWidth / 2, offsetY + squareWidth / 2, 0)
         mPoints[0][1] = Point(offsetX + squareWidth / 2 * 3, offsetY + squareWidth / 2, 1)
