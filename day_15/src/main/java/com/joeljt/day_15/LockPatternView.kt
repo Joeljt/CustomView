@@ -3,7 +3,9 @@ package com.joeljt.day_15
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.util.AttributeSet
+import android.util.MathUtils
 import android.view.MotionEvent
 import android.view.View
 import java.util.jar.Attributes
@@ -41,6 +43,20 @@ class LockPatternView : View {
     private val mOuterErrorColor = 0xff901032.toInt()
     private val mInnerErrorColor = 0xffea0945.toInt()
 
+    // 按下的时候是否按在一个点上
+    private var mIsTouchPoint = false
+    // 按下的点需要存起来
+    private var mSelectPoints = ArrayList<Point>()
+
+    private lateinit var mFinishListener: OnLockPatternFinishedListener
+
+    public fun setOnLockPatternFinishedListener(l: OnLockPatternFinishedListener){
+        this.mFinishListener = l
+    }
+
+    // 记录错误状态
+    private var mIsErrorStatus = false
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attr: AttributeSet?) : this(context, attr, 0)
@@ -58,44 +74,191 @@ class LockPatternView : View {
 
     }
 
+    private var mMovingX = 0f
+    private var mMovingY = 0f
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        when(event.action){
+
+        mMovingX = event.x
+        mMovingY = event.y
+
+        when (event.action) {
 
             MotionEvent.ACTION_DOWN -> {
+                // 如何判断手指按下的位置是不是在圆内
+                // 按下的位置到圆心的距离 < 半径
+                var point = point
+                if (point != null) {
+                    mIsTouchPoint = true
+                    mSelectPoints.add(point)
+                    // 改变当前点的状态
+                    point.setStatusPressed()
+                }
+            }
 
+            MotionEvent.ACTION_MOVE -> {
+                if (mIsTouchPoint) {
+                    // 按下的时候如果是在不同的点，不断滑动的时候要去绘制新点
+                    var point = point
+                    if (point != null) {
+                        if (!mSelectPoints.contains(point)) {
+                            mSelectPoints.add(point)
+                        }
+                        // 改变当前点的状态
+                        point.setStatusPressed()
+                    }
+                }
             }
 
             MotionEvent.ACTION_UP -> {
 
-            }
+                if (mSelectPoints.size == 1) {
+                    resetPointStatus()
+                } else if (mSelectPoints.size < 4) {
+                    showSelectError()
+                } else {
+                    // 正常情况，处理回调
+                    handleSuccessCallback()
 
-            MotionEvent.ACTION_MOVE -> {
+                }
+
+                // 抬起的时候回调监听
+                mIsTouchPoint = false
 
             }
 
         }
-
+        invalidate()
         return true
+    }
+
+    private fun handleSuccessCallback() {
+        mFinishListener.onLockPatternFinished(getResult(mSelectPoints))
+        postDelayed({
+            resetPointStatus()
+        },300)
+    }
+
+    private fun getResult(mSelectPoints: ArrayList<Point>): String {
+        var resultStr = StringBuilder()
+        mSelectPoints.forEach {
+            resultStr.append(it.index + 1)
+        }
+        return resultStr.toString()
+    }
+
+    private fun showSelectError() {
+        // 显示错误信息
+        mIsErrorStatus = true
+        mSelectPoints.forEach {
+            it.setStatusError()
+        }
+
+        resetPointStatus()
+
+    }
+
+    private fun resetPointStatus() {
+        if (mSelectPoints.size > 0) {
+            postDelayed({
+                mSelectPoints.forEach {
+                    it.setStatusNormal()
+                }
+                mIsErrorStatus = false
+                mSelectPoints.clear()
+                postInvalidate()
+            }, 200)
+        }
+
     }
 
     /**
      * 绘制九宫格显示
      */
-    private fun drawShow(canvas: Canvas){
+    private fun drawShow(canvas: Canvas) {
         for (i in 0..2) {
             for (point in mPoints[i]) {
 
-                // 先绘制外圆
-                mNormalPaint.color = mOuterNormalColor
-                canvas.drawCircle(point!!.centerX.toFloat(),
-                        point.centerY.toFloat(), mDotRadius.toFloat(), mNormalPaint)
+                // 正常状态
+                if (point!!.statusIsNormal()) {
 
-                // 后绘制内圆
-                mNormalPaint.color = mInnerNormalColor
-                canvas.drawCircle(point!!.centerX.toFloat(),
-                        point.centerY.toFloat(), mDotRadius/6.toFloat(), mNormalPaint)
+                    // 先绘制外圆
+                    mNormalPaint.color = mOuterNormalColor
+                    canvas.drawCircle(point.centerX.toFloat(),
+                            point.centerY.toFloat(), mDotRadius.toFloat(), mNormalPaint)
 
+                    // 后绘制内圆
+                    mNormalPaint.color = mInnerNormalColor
+                    canvas.drawCircle(point.centerX.toFloat(),
+                            point.centerY.toFloat(), mDotRadius / 6.toFloat(), mNormalPaint)
 
+                }
+
+                // 按下状态
+                if (point.statusIsPressed()) {
+
+                    // 先绘制外圆
+                    mPressedPaint.color = mOuterPressedColor
+                    canvas.drawCircle(point.centerX.toFloat(),
+                            point.centerY.toFloat(), mDotRadius.toFloat(), mPressedPaint)
+
+                    // 后绘制内圆
+                    mPressedPaint.color = mInnerPressedColor
+                    canvas.drawCircle(point.centerX.toFloat(),
+                            point.centerY.toFloat(), mDotRadius / 6.toFloat(), mPressedPaint)
+
+                }
+
+                // 错误状态
+                if (point.statusIsError()) {
+
+                    // 先绘制外圆
+                    mErrorPaint.color = mOuterErrorColor
+                    canvas.drawCircle(point.centerX.toFloat(),
+                            point.centerY.toFloat(), mDotRadius.toFloat(), mErrorPaint)
+
+                    // 后绘制内圆
+                    mErrorPaint.color = mInnerErrorColor
+                    canvas.drawCircle(point.centerX.toFloat(),
+                            point.centerY.toFloat(), mDotRadius / 6.toFloat(), mErrorPaint)
+
+                }
+
+            }
+        }
+
+        // 绘制两个点之间连线以及箭头
+        drawLineToCanvas(canvas)
+
+    }
+
+    /**
+     * 画线
+     * @param canvas
+     */
+    private fun drawLineToCanvas(canvas: Canvas) {
+        if (mSelectPoints.size >= 1) {
+            if (mIsErrorStatus) {
+                mLinePaint!!.color = mInnerErrorColor
+                mArrowPaint!!.color = mInnerErrorColor
+            } else {
+                mLinePaint!!.color = mInnerPressedColor
+                mArrowPaint!!.color = mInnerPressedColor
+            }
+
+            var lastPoint = mSelectPoints[0]
+            for (i in 1..mSelectPoints.size - 1) {
+                val point = mSelectPoints[i]
+                // 不断的画线
+                drawLine(lastPoint, point, canvas, mLinePaint!!)
+                drawArrow(canvas, mArrowPaint!!, lastPoint, point, (mDotRadius / 4).toFloat(), 38)
+                lastPoint = point
+            }
+
+            // 如果手指在内圆里就不再绘制了
+            val isInnerPoint = MathUtil.checkInRound(lastPoint.centerX.toFloat(), lastPoint.centerY.toFloat(), mDotRadius.toFloat(), mMovingX, mMovingY)
+            if (mIsTouchPoint && !isInnerPoint) {
+                drawLine(lastPoint, Point(mMovingX.toInt(), mMovingY.toInt(), -1), canvas, mLinePaint!!)
             }
         }
     }
@@ -199,7 +362,83 @@ class LockPatternView : View {
         // 当前点的状态，有三种状态
         private var status = STATUS_NORMAL
 
+        fun setStatusNormal() {
+            status = STATUS_NORMAL
+        }
+
+        fun setStatusPressed() {
+            status = STATUS_PRESSED
+        }
+
+        fun setStatusError() {
+            status = STATUS_ERROR
+        }
+
+        fun statusIsNormal(): Boolean {
+            return status == STATUS_NORMAL
+        }
+
+        fun statusIsPressed(): Boolean {
+            return status == STATUS_PRESSED
+        }
+
+        fun statusIsError(): Boolean {
+            return status == STATUS_ERROR
+        }
+
     }
 
+
+    private val point: Point?
+        get() {
+            for (i in mPoints.indices) {
+                (0 until mPoints[i].size)
+                        .map { mPoints[i][it] }
+                        .filter {
+                            MathUtil.checkInRound(it!!.centerX.toFloat(), it.centerY.toFloat(),
+                                    mDotRadius.toFloat(), mMovingX, mMovingY)
+                        }
+                        .forEach { return it }
+            }
+            return null
+        }
+
+    /**
+     * 画线
+     */
+    private fun drawLine(start: Point, end: Point, canvas: Canvas, paint: Paint) {
+        val d = MathUtil.distance(start.centerX.toDouble(), start.centerY.toDouble(), end.centerX.toDouble(), end.centerY.toDouble())
+        val rx = (((end.centerX - start.centerX) * mDotRadius).toDouble() / 5.0 / d).toFloat()
+        val ry = (((end.centerY - start.centerY) * mDotRadius).toDouble() / 5.0 / d).toFloat()
+        canvas.drawLine(start.centerX + rx, start.centerY + ry, end.centerX - rx, end.centerY - ry, paint)
+    }
+
+    /**
+     * 画箭头
+     */
+    private fun drawArrow(canvas: Canvas, paint: Paint, start: Point, end: Point, arrowHeight: Float, angle: Int) {
+        val d = MathUtil.distance(start.centerX.toDouble(), start.centerY.toDouble(), end.centerX.toDouble(), end.centerY.toDouble())
+        val sin_B = ((end.centerX - start.centerX) / d).toFloat()
+        val cos_B = ((end.centerY - start.centerY) / d).toFloat()
+        val tan_A = Math.tan(Math.toRadians(angle.toDouble())).toFloat()
+        val h = (d - arrowHeight.toDouble() - mDotRadius * 1.1).toFloat()
+        val l = arrowHeight * tan_A
+        val a = l * sin_B
+        val b = l * cos_B
+        val x0 = h * sin_B
+        val y0 = h * cos_B
+        val x1 = start.centerX + (h + arrowHeight) * sin_B
+        val y1 = start.centerY + (h + arrowHeight) * cos_B
+        val x2 = start.centerX + x0 - b
+        val y2 = start.centerY.toFloat() + y0 + a
+        val x3 = start.centerX.toFloat() + x0 + b
+        val y3 = start.centerY + y0 - a
+        val path = Path()
+        path.moveTo(x1, y1)
+        path.lineTo(x2, y2)
+        path.lineTo(x3, y3)
+        path.close()
+        canvas.drawPath(path, paint)
+    }
 
 }
