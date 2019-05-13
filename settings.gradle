@@ -1,1 +1,1 @@
-include ':day_01', ':day_02', ':day_03', ':day_04', ':day_05', ':day_06', ':day_27', ':day_18', ':day_21', ':day_22', ':day_23', ':day_15', ':day_14'
+include ':day_01', ':day_02', ':day_03', ':day_04', ':day_05', ':day_06', ':day_27', ':day_18', ':day_21', ':day_22', ':day_23', ':day_15', ':day_14', ':day_13'
