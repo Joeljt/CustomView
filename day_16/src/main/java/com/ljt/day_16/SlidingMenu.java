@@ -1,8 +1,8 @@
-package com.ljt.day_13;
+package com.ljt.day_16;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.view.ViewCompat;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,8 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
-
-import java.lang.reflect.Type;
+import android.widget.RelativeLayout;
 
 /**
  * Created by JoeLjt on 2019/5/13.
@@ -28,6 +27,7 @@ public class SlidingMenu extends HorizontalScrollView {
 
     private View mMenuView;
     private View mContentView;
+    private View mShadowView;
 
     private boolean mMenuOpened;
 
@@ -110,9 +110,25 @@ public class SlidingMenu extends HorizontalScrollView {
 
         // 2. 内容页的宽度是屏幕的宽度
         mContentView = linearLayout.getChildAt(1);
-        ViewGroup.LayoutParams contentParam = mContentView.getLayoutParams();
-        contentParam.width = getScreenWidth(getContext());
-        mContentView.setLayoutParams(contentParam);
+
+        linearLayout.removeView(mContentView);
+
+        RelativeLayout containerLayout = new RelativeLayout(getContext());
+        mShadowView = new View(getContext());
+        mShadowView.setBackgroundColor(Color.parseColor("#55000000"));
+        mShadowView.setAlpha(0.0f);
+
+        containerLayout.addView(mContentView);
+        containerLayout.addView(mShadowView);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -1);
+        layoutParams.width = getScreenWidth(getContext());
+        containerLayout.setLayoutParams(layoutParams);
+        linearLayout.addView(containerLayout);
+
+//        ViewGroup.LayoutParams contentParam = mContentView.getLayoutParams();
+//        contentParam.width = getScreenWidth(getContext());
+//        containerLayout.setLayoutParams(contentParam);
 
     }
 
@@ -168,21 +184,11 @@ public class SlidingMenu extends HorizontalScrollView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
 
-        // 计算一个梯度值
-        float scale = 1.0f * l / mMenuWidth; // l 从 0 到 mMenuWidth, scale 从 1 到 0
-        // 右边的缩放值从 0.7 到 1
-        float rightScale = (float) (0.7 + 0.3 * scale);
+        float scale = 1.0f *  l / mMenuWidth;
+        float resultScale =  (1-scale);
+        mShadowView.setAlpha(resultScale);
 
-        // 默认以当前 View 的中心点缩放，重新设置中心点为左边中间位置
-        mContentView.setPivotX(0);
-        mContentView.setPivotY(mContentView.getMeasuredHeight() / 2);
-        mContentView.setScaleX(rightScale);
-        mContentView.setScaleY(rightScale);
-
-        // 设置菜单缩放以及透明度
-        float leftScale = 0.7f + (1 - scale) * 0.3f;
-        mMenuView.setScaleX(leftScale);
-        mMenuView.setScaleY(leftScale);
+        mMenuView.setTranslationX(0.6f*l);
 
     }
 
